@@ -14,6 +14,7 @@ interface IProps {
 	handleFormClose: () => void;
 	handleCreateOrEditActivity: (activity: IActivity) => void;
 	handleDeleteActivity: (id: string) => void;
+	submitting: boolean;
 }
 
 const ActivityDashboard = (props: IProps) => {
@@ -27,6 +28,7 @@ const ActivityDashboard = (props: IProps) => {
 		handleFormClose,
 		handleCreateOrEditActivity,
 		handleDeleteActivity,
+		submitting,
 	} = props;
 
 	return (
@@ -36,6 +38,7 @@ const ActivityDashboard = (props: IProps) => {
 					activities={activities}
 					handleSelectedActivity={handleSelectedActivity}
 					handleDeleteActivity={handleDeleteActivity}
+					submitting={submitting}
 				/>
 			</Col>
 			<Col>
@@ -51,6 +54,7 @@ const ActivityDashboard = (props: IProps) => {
 						handleFormClose={handleFormClose}
 						selectedActivity={selectedActivity}
 						handleCreateOrEditActivity={handleCreateOrEditActivity}
+						submitting={submitting}
 					/>
 				)}
 			</Col>

@@ -6,11 +6,16 @@ interface IProps {
 	handleFormClose: () => void;
 	selectedActivity: IActivity | undefined;
 	handleCreateOrEditActivity: (activity: IActivity) => void;
+	submitting: boolean;
 }
 
 const ActivityForm = (props: IProps) => {
-	const { handleFormClose, selectedActivity, handleCreateOrEditActivity } =
-		props;
+	const {
+		handleFormClose,
+		selectedActivity,
+		handleCreateOrEditActivity,
+		submitting,
+	} = props;
 
 	const initialState = selectedActivity ?? {
 		id: "",
@@ -79,7 +84,7 @@ const ActivityForm = (props: IProps) => {
 					initialValue={activity.date}
 					rules={[{ required: true, message: "Please input your Date!" }]}
 				>
-					<Input placeholder='Date' />
+					<Input type='date' placeholder='Date' />
 				</Form.Item>
 				<Form.Item
 					label='City'
@@ -100,7 +105,7 @@ const ActivityForm = (props: IProps) => {
 
 				<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
 					<Space>
-						<Button type='primary' htmlType='submit'>
+						<Button loading={submitting} type='primary' htmlType='submit'>
 							Submit
 						</Button>
 						<Button onClick={handleFormClose} danger>
