@@ -1,14 +1,30 @@
 import { DeleteOutlined, FolderViewOutlined } from "@ant-design/icons";
 import { Avatar, Button, List, Space, Tag } from "antd";
+import { useState } from "react";
 import { IActivity } from "../../../app/models/activity";
 
 interface IProps {
 	activities: IActivity[];
 	handleSelectedActivity: (id: string) => void;
 	handleDeleteActivity: (id: string) => void;
+	submitting: boolean;
 }
 const ActivityList = (props: IProps) => {
-	const { activities, handleSelectedActivity, handleDeleteActivity } = props;
+	const {
+		activities,
+		handleSelectedActivity,
+		handleDeleteActivity,
+		submitting,
+	} = props;
+
+	const [target, setTarget] = useState("");
+
+	const handleActivityDelete = (e: any, id: string) => {
+		setTarget(e.target.name);
+		handleDeleteActivity(id);
+	};
+	console.log("target", target);
+
 	return (
 		<div>
 			<List
@@ -31,7 +47,12 @@ const ActivityList = (props: IProps) => {
 								View
 								<FolderViewOutlined />
 							</Button>
-							<Button danger onClick={() => handleDeleteActivity(item.id)}>
+							<Button
+								danger
+								loading={submitting && target === item.id}
+								name={item.id}
+								onClick={(e) => handleActivityDelete(e, item.id)}
+							>
 								Delete
 								<DeleteOutlined />
 							</Button>
