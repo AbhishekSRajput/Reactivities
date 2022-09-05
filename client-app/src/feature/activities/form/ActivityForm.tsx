@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { Button, Form, Input, Space } from "antd";
 import { IActivity } from "../../../app/models/activity";
+import { useStore } from "../../../app/store/store";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-	handleFormClose: () => void;
-	selectedActivity: IActivity | undefined;
-	handleCreateOrEditActivity: (activity: IActivity) => void;
-	submitting: boolean;
-}
-
-const ActivityForm = (props: IProps) => {
+const ActivityForm = () => {
+	const { activityStore } = useStore();
 	const {
-		handleFormClose,
 		selectedActivity,
-		handleCreateOrEditActivity,
-		submitting,
-	} = props;
+		closeForm,
+		createActivity,
+		updateActivity,
+		loading,
+	} = activityStore;
 
 	const initialState = selectedActivity ?? {
 		id: "",
@@ -32,9 +29,10 @@ const ActivityForm = (props: IProps) => {
 	// Form
 	const onFinish = (values: IActivity) => {
 		setActivity({ ...activity, ...values });
-		handleCreateOrEditActivity(values);
+		activity?.id ? updateActivity(activity) : createActivity(activity);
+		console.log("on finish", activity);
+		console.log("values", values);
 	};
-
 	console.log("activity", activity);
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -105,10 +103,10 @@ const ActivityForm = (props: IProps) => {
 
 				<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
 					<Space>
-						<Button loading={submitting} type='primary' htmlType='submit'>
+						<Button loading={loading} type='primary' htmlType='submit'>
 							Submit
 						</Button>
-						<Button onClick={handleFormClose} danger>
+						<Button onClick={closeForm} danger>
 							Cancel
 						</Button>
 					</Space>
@@ -118,4 +116,4 @@ const ActivityForm = (props: IProps) => {
 	);
 };
 
-export default ActivityForm;
+export default observer(ActivityForm);

@@ -1,16 +1,26 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card } from "antd";
 import Meta from "antd/lib/card/Meta";
-import { IActivity } from "../../../app/models/activity";
+import { observer } from "mobx-react-lite";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { useStore } from "../../../app/store/store";
 
-interface IProps {
-	activity: IActivity;
-	handleCancelActivity: () => void;
-	handleFormOpen: (id: string) => void;
-}
+const ActivityDetails = () => {
+	const { activityStore } = useStore();
+	const {
+		selectedActivity: activity,
+		openForm,
+		cancelSelectedActivity,
+	} = activityStore;
 
-const ActivityDetails = (props: IProps) => {
-	const { activity, handleCancelActivity, handleFormOpen } = props;
+	if (!activity)
+		return (
+			<LoadingComponent
+				content='just for solving the component without jsx'
+				isModalVisible={false}
+			/>
+		);
+
 	return (
 		<>
 			<Card
@@ -22,11 +32,11 @@ const ActivityDetails = (props: IProps) => {
 					/>
 				}
 				actions={[
-					<Button onClick={() => handleFormOpen(activity.id)}>
+					<Button onClick={() => openForm(activity.id)}>
 						<EditOutlined key='edit' />
 						Edit
 					</Button>,
-					<Button danger onClick={handleCancelActivity}>
+					<Button danger onClick={cancelSelectedActivity}>
 						Cancel
 					</Button>,
 				]}
@@ -42,4 +52,4 @@ const ActivityDetails = (props: IProps) => {
 	);
 };
 
-export default ActivityDetails;
+export default observer(ActivityDetails);

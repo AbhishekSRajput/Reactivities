@@ -1,11 +1,9 @@
 import { AppstoreAddOutlined, DeploymentUnitOutlined } from "@ant-design/icons";
 import { Button, Menu, Tag } from "antd";
+import { useStore } from "../store/store";
 
-interface IProps {
-	handleFormOpen: () => void;
-}
-const Navbar = (props: IProps) => {
-	const { handleFormOpen } = props;
+const Navbar = () => {
+	const { activityStore } = useStore();
 	return (
 		<>
 			<Menu mode='horizontal' defaultSelectedKeys={["1"]}>
@@ -35,7 +33,7 @@ const Navbar = (props: IProps) => {
 						}}
 					>
 						<Button
-							onClick={handleFormOpen}
+							onClick={() => activityStore.openForm()}
 							style={{ border: "none", background: "transparent" }}
 						>
 							<AppstoreAddOutlined />

@@ -1,35 +1,25 @@
 import { DeleteOutlined, FolderViewOutlined } from "@ant-design/icons";
 import { Avatar, Button, List, Space, Tag } from "antd";
+import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import { IActivity } from "../../../app/models/activity";
+import { useStore } from "../../../app/store/store";
 
-interface IProps {
-	activities: IActivity[];
-	handleSelectedActivity: (id: string) => void;
-	handleDeleteActivity: (id: string) => void;
-	submitting: boolean;
-}
-const ActivityList = (props: IProps) => {
-	const {
-		activities,
-		handleSelectedActivity,
-		handleDeleteActivity,
-		submitting,
-	} = props;
-
+const ActivityList = () => {
+	const { activityStore } = useStore();
+	const { deleteActivity, activitiesByDate, loading } = activityStore;
 	const [target, setTarget] = useState("");
 
 	const handleActivityDelete = (e: any, id: string) => {
 		setTarget(e.target.name);
-		handleDeleteActivity(id);
+		deleteActivity(id);
 	};
+	console.log(activitiesByDate);
 	console.log("target", target);
-
 	return (
 		<div>
 			<List
 				itemLayout='horizontal'
-				dataSource={activities}
+				dataSource={activitiesByDate}
 				renderItem={(item) => (
 					<List.Item>
 						<List.Item.Meta
@@ -42,14 +32,14 @@ const ActivityList = (props: IProps) => {
 							<div style={{ marginRight: 35 }}>{item.date}</div>
 							<Button
 								type='primary'
-								onClick={() => handleSelectedActivity(item.id)}
+								onClick={() => activityStore.selectActivity(item.id)}
 							>
 								View
 								<FolderViewOutlined />
 							</Button>
 							<Button
 								danger
-								loading={submitting && target === item.id}
+								loading={loading && target === item.id}
 								name={item.id}
 								onClick={(e) => handleActivityDelete(e, item.id)}
 							>
@@ -64,4 +54,4 @@ const ActivityList = (props: IProps) => {
 	);
 };
 
-export default ActivityList;
+export default observer(ActivityList);
